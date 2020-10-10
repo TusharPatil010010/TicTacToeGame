@@ -4,12 +4,14 @@ import java.util.Scanner;
 
 public class TicTacToeGame {
 	
-	Scanner input = new Scanner(System.in);
+	static Scanner input = new Scanner(System.in);
 
 	public static String[] board = new String[10];
 	public static String computer;
 	public static String player;
+	public static boolean moveflag;
 	
+
 	/**
 	 * UC1 Creating Board
 	 */
@@ -62,6 +64,20 @@ public class TicTacToeGame {
 		}
 		System.out.println();
 	}
+	
+	/**
+	 * UC4 and UC5 choose position to make move at that position
+	 * @param position
+	 */
+	public void makeMove(int position) {
+			if(board[position] == "" && position > 0 && position < 10) {
+				board[position] = player;
+			}
+			else {
+				System.out.println("Cannot choose this position, choose an empty position or enter valid index");
+				moveflag = true;
+			}
+	}
 
 	public static void main(String[] args) {
 		
@@ -72,5 +88,13 @@ public class TicTacToeGame {
 		System.out.println("Player's symbol : " + player);
 		System.out.println("Computer's symbol : " + computer);
 		tictacobject.showBoard();
+		
+		moveflag = false;
+		do {
+		System.out.println("Enter the position where you want to make your move ");
+		int position = input.nextInt();
+		tictacobject.makeMove(position);
+		tictacobject.showBoard();
+		} while(moveflag);
 	}
 }
