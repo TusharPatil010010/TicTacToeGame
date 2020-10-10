@@ -105,6 +105,45 @@ public class TicTacToeGame {
 		}
 	}
 
+	/**
+	 * UC7 decide next move
+	 */
+	public void decideNext() {
+		boolean flagNext = false;
+		int count = 1;
+		if (board[1].equals(symbol) && board[2].equals(symbol) && board[3].equals(symbol)) {
+			flagNext = true;
+		} else if (board[4].equals(symbol) && board[5].equals(symbol) && board[6].equals(symbol)) {
+			flagNext = true;
+		} else if (board[7].equals(symbol) && board[8].equals(symbol) && board[9].equals(symbol)) {
+			flagNext = true;
+		} else if (board[1].equals(symbol) && board[5].equals(symbol) && board[9].equals(symbol)) {
+			flagNext = true;
+		} else if (board[3].equals(symbol) && board[5].equals(symbol) && board[7].equals(symbol)) {
+			flagNext = true;
+		} else if (board[1].equals(symbol) && board[4].equals(symbol) && board[7].equals(symbol)) {
+			flagNext = true;
+		} else if (board[2].equals(symbol) && board[5].equals(symbol) && board[8].equals(symbol)) {
+			flagNext = true;
+		} else if (board[3].equals(symbol) && board[6].equals(symbol) && board[9].equals(symbol)) {
+			flagNext = true;
+		}
+		if (flagNext == true) {
+			System.out.println("Win");
+			flagNextDecide = false;
+		} else {
+			for (int i = 1; i < board.length; i++) {
+				if (board[i] != "") {
+					count++;
+				}
+			}
+			if (count == 9) {
+				System.out.println("Tie");
+			} else {
+				System.out.println("Next turn");
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 
@@ -120,11 +159,13 @@ public class TicTacToeGame {
 		System.out.println("Computer's symbol : " + computer);
 		tictacobject.showBoard();
 
-		
-		System.out.println("Enter the position where you want to make your move ");
-		int position = input.nextInt();
-		tictacobject.makeMove(position);
-		tictacobject.showBoard()
-
+		do {
+			flagNextDecide = true;
+			System.out.println("Enter the position where you want to make your move ");
+			int position = input.nextInt();
+			tictacobject.makeMove(position);
+			tictacobject.showBoard();
+			tictacobject.decideNext();
+		} while (flagNextDecide);
 	}
 }
