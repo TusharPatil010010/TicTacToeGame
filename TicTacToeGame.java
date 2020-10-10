@@ -1,6 +1,5 @@
 public class TicTacToeGame {
-	
-	//Initialization
+
 	public static String[] board = new String[10];
 
 	/**
