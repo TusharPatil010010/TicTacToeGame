@@ -4,9 +4,13 @@ import java.util.Scanner;
 
 public class TicTacToeGame {
 	Scanner scanner = new Scanner(System.in);
-	static String user;
+
+	static String inputSymbol;
 	public static String[] board = new String[10];
 	static String computer;
+	static int countMoves = 0;
+	static int Max = 10;
+	static int count = 0;
 
 	/**
 	 * Usecase 1
@@ -24,17 +28,17 @@ public class TicTacToeGame {
 
 		do {
 			System.out.println("Enter the symbol for player from X or O");
-			user = scanner.nextLine();
-			if (user.equals("X")) {
+			inputSymbol = scanner.nextLine();
+			if (inputSymbol.equals("X")) {
 				computer = "O";
 				break;
-			} else if (user.equals("O")) {
+			} else if (inputSymbol.equals("O")) {
 				computer = "X";
 				break;
 			} else {
 				System.out.println("Invalid input");
 			}
-		} while (user != "O" || user != "X");
+		} while (inputSymbol != "O" || inputSymbol != "X");
 	}
 
 	/**
@@ -60,22 +64,21 @@ public class TicTacToeGame {
 	 * @param whoIsPlaying
 	 * @return
 	 */
-	public String makeMove(int position, String whoIsPlaying, String symbol) {
-		boolean check = isWinner(board,symbol);
-		boolean tie = isTie();
-		if (board[position] == " " && check == false && tie == false) {
-			if (whoIsPlaying.equals("User")) {
-				board[position] = user;
-				whoIsPlaying = "Computer";
-			} else {
-				board[position] = computer;
-				whoIsPlaying = "User";
-			}
+	public String makeMove(int position) {
+		String play = "User";
+		if (position < 1 || position > 9) {
+			System.out.println("Invalid position");
+		} else if (board[position].equals(" ")) {
+			board[position] = inputSymbol;
+			play = "Computer";
+			countMoves++;
 		} else {
-			System.out.println("Enter empty position");
+			System.out.println("Enter an empty position");
+			showBoard();
 		}
-		return whoIsPlaying;
+		return play;
 	}
+
 	/**
 	 * Usecase6
 	 * 
@@ -96,57 +99,93 @@ public class TicTacToeGame {
 		return startFirst;
 	}
 
-
-	/**
-	 * Uscase7
-	 * @return
-	 */
-	public boolean isTie() {
-		boolean flag = true;
-		for (int i = 1; i < board.length; i++) {
-			if (board[i] == " ") {
-				flag = false;
-			}
-		}
-		return flag;
-	}
-	
 	/**
 	 * Usecase7
+	 * 
 	 * @param symbol
 	 * @return
 	 */
-	public boolean isWinner(String[] board, String symbol) {
-		boolean flag = false;
+	public int isWinner(String[] board, String symbol) {
 		if (board[1].equals(symbol) && board[2].equals(symbol) && board[3].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[4].equals(symbol) && board[5].equals(symbol) && board[6].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[7].equals(symbol) && board[8].equals(symbol) && board[9].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[1].equals(symbol) && board[5].equals(symbol) && board[9].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[3].equals(symbol) && board[5].equals(symbol) && board[7].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[1].equals(symbol) && board[4].equals(symbol) && board[7].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[2].equals(symbol) && board[5].equals(symbol) && board[8].equals(symbol)) {
-			flag = true;
+			return 1;
 		} else if (board[3].equals(symbol) && board[6].equals(symbol) && board[9].equals(symbol)) {
-			flag = true;
+			return 1;
 		}
-		return flag;
+		if (countMoves == 9) {
+			return 2;
+		}
+		return 0;
 	}
-	/**Usecase8
+
+	/**
+	 * Usecase8
+	 * 
 	 * @return
 	 */
 	public int winPosition() {
 		String[] copyOfBoard = board.clone();
-		for(int i = 1; i < copyOfBoard.length; i++){
-			if(copyOfBoard[i].equals(" ")) {
+		for (int i = 1; i < copyOfBoard.length; i++) {
+			if (copyOfBoard[i].equals(" ")) {
 				copyOfBoard[i] = computer;
-				if(isWinner(copyOfBoard,computer)) {
+				if (isWinner(copyOfBoard, computer) == 1) {
 					return i;
+				} else {
+					copyOfBoard[i] = " ";
+				}
+			}
+		}
+		return 0;
+	}
+
+	public String compMove() {
+		String play = "Computer";
+		int winPosition = winPosition();
+
+		int position = (int) Math.floor(Math.random() * 10) % 9 + 1;
+		if (count > 0 && count <= Max) {
+			int pos = blockUsersWin();
+			if (pos != 0) {
+				position = pos;
+			}
+		} else if (winPosition != 0) {
+			position = winPosition;
+		}
+		if (board[position].equals(" ")) {
+			board[position] = computer;
+			System.out.println("Computer played the move");
+			play = "User";
+			showBoard();
+			count++;
+			countMoves++;
+		}
+		return play;
+	}
+
+	/**
+	 * UC9 Bock user if he is winning
+	 * @return
+	 */
+	public int blockUsersWin() {
+		String[] copyOfBoard = board.clone();
+		for (int i = 1; i < copyOfBoard.length; i++) {
+			if (copyOfBoard[i].equals(" ")) {
+				copyOfBoard[i] = inputSymbol;
+				if (isWinner(copyOfBoard, inputSymbol) == 1) {
+					return i;
+				} else {
+					copyOfBoard[i] = " ";
 				}
 			}
 		}
@@ -159,27 +198,31 @@ public class TicTacToeGame {
 		tictac.createBoard();
 		tictac.chooseSymbol();
 		String player = tictac.playFirst();
-		do {
+		while (true) {
 			if (player.equals("Computer")) {
-				int compsPosition = tictac.winPosition();
-				player = tictac.makeMove(compsPosition, player, computer);
-				tictac.showBoard();
+				player = tictac.compMove();
+				if (tictac.isWinner(board, computer) == 1) {
+					System.out.println("Winner is Computer");
+					break;
+				} else if (tictac.isWinner(board, computer) == 2) {
+					System.out.println("No one has won the game");
+					break;
+				}
 			} else {
 				System.out.println("Enter the position for move");
 				int position = scan.nextInt();
 				scan.nextLine();
-				player = tictac.makeMove(position, player, user);
+				player = tictac.makeMove(position);
 				tictac.showBoard();
+				if (tictac.isWinner(board, inputSymbol) == 1) {
+					System.out.println("Winner is User");
+					break;
+				} else if (tictac.isWinner(board, inputSymbol) == 2) {
+					System.out.println("No one has won the game");
+					break;
+				}
 			}
-			if (tictac.isWinner(board,user) == true) {
-				System.out.println("User wins");
-				break;
-			} else if (tictac.isWinner(board,computer) == true) {
-				System.out.println("Computer wins");
-				break;
-			}
-		} while (tictac.isTie() == false);
-		tictac.showBoard();
+		}
 		scan.close();
 	}
 }
