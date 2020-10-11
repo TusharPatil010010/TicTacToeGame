@@ -5,15 +5,13 @@ import java.util.Scanner;
 public class TicTacToeGame {
 	Scanner scanner = new Scanner(System.in);
 
-	static String inputSymbol;
 	public static String[] board = new String[10];
 	static String computer;
 	static int countMoves = 0;
-	static int Max = 10;
-	static int count = 0;
+	static String inputSymbol;
 
 	/**
-	 * Usecase 1
+	 * Usecase1
 	 */
 	public void createBoard() {
 		for (int i = 1; i < 10; i++) {
@@ -60,8 +58,6 @@ public class TicTacToeGame {
 	/**
 	 * Usecase4 and Usecase5
 	 * 
-	 * @param position
-	 * @param whoIsPlaying
 	 * @return
 	 */
 	public String makeMove(int position) {
@@ -149,32 +145,9 @@ public class TicTacToeGame {
 		return 0;
 	}
 
-	public String compMove() {
-		String play = "Computer";
-		int winPosition = winPosition();
-
-		int position = (int) Math.floor(Math.random() * 10) % 9 + 1;
-		if (count > 0 && count <= Max) {
-			int pos = blockUsersWin();
-			if (pos != 0) {
-				position = pos;
-			}
-		} else if (winPosition != 0) {
-			position = winPosition;
-		}
-		if (board[position].equals(" ")) {
-			board[position] = computer;
-			System.out.println("Computer played the move");
-			play = "User";
-			showBoard();
-			count++;
-			countMoves++;
-		}
-		return play;
-	}
-
 	/**
-	 * UC9 Bock user if he is winning
+	 * Usecase9
+	 * 
 	 * @return
 	 */
 	public int blockUsersWin() {
@@ -192,6 +165,35 @@ public class TicTacToeGame {
 		return 0;
 	}
 
+	/**
+	 * Usecase8, Usecase9 modified for Usecase10
+	 * 
+	 * @return
+	 */
+	public String compMove() {
+		String play = "Computer";
+		int winPosition = winPosition();
+		int pos = blockUsersWin();
+		int[] corners = { 1, 3, 7, 9 };
+		int position = (int) Math.floor(Math.random() * 10) % 9 + 1;
+		if (winPosition != 0) {
+			position = winPosition;
+		} else if (winPosition == 0 && pos != 0) {
+			position = pos;
+		} else if (winPosition == 0 && pos == 0) {
+			int choice = (int) Math.floor(Math.random() * 10) % 4;
+			position = corners[choice];
+		}
+		if (board[position].equals(" ")) {
+			board[position] = computer;
+			System.out.println("Computer played the move");
+			play = "User";
+			showBoard();
+			countMoves++;
+		}
+		return play;
+	}
+
 	public static void main(String[] args) {
 		TicTacToeGame tictac = new TicTacToeGame();
 		Scanner scan = new Scanner(System.in);
@@ -202,7 +204,7 @@ public class TicTacToeGame {
 			if (player.equals("Computer")) {
 				player = tictac.compMove();
 				if (tictac.isWinner(board, computer) == 1) {
-					System.out.println("Winner is Computer");
+					System.out.println(" Computer wins");
 					break;
 				} else if (tictac.isWinner(board, computer) == 2) {
 					System.out.println("No one has won the game");
@@ -215,7 +217,7 @@ public class TicTacToeGame {
 				player = tictac.makeMove(position);
 				tictac.showBoard();
 				if (tictac.isWinner(board, inputSymbol) == 1) {
-					System.out.println("Winner is User");
+					System.out.println(" User wins");
 					break;
 				} else if (tictac.isWinner(board, inputSymbol) == 2) {
 					System.out.println("No one has won the game");
