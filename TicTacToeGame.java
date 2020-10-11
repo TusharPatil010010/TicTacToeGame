@@ -249,38 +249,43 @@ public class TicTacToeGame {
 	public static void main(String[] args) {
 		TicTacToeGame tictac = new TicTacToeGame();
 		Scanner scan = new Scanner(System.in);
-		tictac.createBoard();
-		System.out.println("TIC TAC TOE");
-		tictac.chooseSymbol();
-		String player = tictac.playFirst();
-		while (true) {
-			if (player.equals("Computer")) {
-				player = tictac.compMove();
-				if (tictac.isWinner(board, computer) == 1) {
-					System.out.println(" Computer wins");
-					break;
-				} else if (tictac.isWinner(board, computer) == 2) {
-					System.out.println("No one won, It's a tie");
-					break;
-				}
-			} else {
-				System.out.println("User's turn");
-				System.out.println("Enter the position for move");
-				int position = scan.nextInt();
-				scan.nextLine();
-				player = tictac.makeMove(position);
-				System.out.println("____________");
-				tictac.showBoard();
-				System.out.println("____________");
-				if (tictac.isWinner(board, inputSymbol) == 1) {
-					System.out.println(" User wins");
-					break;
-				} else if (tictac.isWinner(board, inputSymbol) == 2) {
-					System.out.println("No one won, It's a tie");
-					break;
+		String anotherGame;
+		do {
+			tictac.createBoard();
+			System.out.println("TIC TAC TOE");
+			tictac.chooseSymbol();
+			String player = tictac.playFirst();
+			while (true) {
+				if (player.equals("Computer")) {
+					player = tictac.compMove();
+					if (tictac.isWinner(board, computer) == 1) {
+						System.out.println(" Computer wins");
+						break;
+					} else if (tictac.isWinner(board, computer) == 2) {
+						System.out.println("No one won, It's a tie");
+						break;
+					}
+				} else {
+					System.out.println("User's turn");
+					System.out.println("Enter the position for move");
+					int position = scan.nextInt();
+					scan.nextLine();
+					player = tictac.makeMove(position);
+					System.out.println("____________");
+					tictac.showBoard();
+					System.out.println("____________");
+					if (tictac.isWinner(board, inputSymbol) == 1) {
+						System.out.println(" User wins");
+						break;
+					} else if (tictac.isWinner(board, inputSymbol) == 2) {
+						System.out.println("No one won, It's a tie");
+						break;
+					}
 				}
 			}
-		}
+			System.out.println("If you want to play another game, press 'y'");
+			anotherGame = scan.nextLine();
+		} while (anotherGame.equals("y"));
 		scan.close();
 	}
 }
