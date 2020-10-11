@@ -1,171 +1,178 @@
-package com.capg.tictactoe;
+package com.capg.ws;
 
 import java.util.Scanner;
 
 public class TicTacToeGame {
-
-	static Scanner input = new Scanner(System.in);
-
+	Scanner scanner = new Scanner(System.in);
+	static String user;
 	public static String[] board = new String[10];
-	public static String computer;
-	public static String player;
-	public static boolean moveflag;
-	public static String symbol;
-	public static boolean flagNextDecide;
+	static String computer = "";
 
 	/**
-	 * UC1 Creating Board
+	 * Usecase 1
 	 */
 	public void createBoard() {
 		for (int i = 1; i < 10; i++) {
-			board[i] = "";
+			board[i] = " ";
 		}
 	}
 
 	/**
-	 * UC2 Choose input symbol for player and computer
-	 * 
-	 * @return
+	 * Usecase2
 	 */
-	public String chooseSymbol() {
-		System.out.println("Choose Symbol between X/O ");
-		String choice = input.nextLine();
-		symbol = choice;
+	public void chooseSymbol() {
 
-		boolean flag = false;
 		do {
-			if (symbol.equalsIgnoreCase("x")) {
-				player = "X";
+			System.out.println("Enter the symbol for player from X or O");
+			user = scanner.nextLine();
+			if (user.equals("X")) {
 				computer = "O";
-			} else if (symbol.equalsIgnoreCase("o")) {
-				player = "X";
-				computer = "O";
+				break;
+			} else if (user.equals("O")) {
+				computer = "X";
+				break;
 			} else {
-				System.out.println("Enter valid input");
-				flag = true;
+				System.out.println("Invalid input");
 			}
-		} while (flag);
-		return symbol;
+		} while (user != "O" || user != "X");
 	}
 
 	/**
-	 * UC3 show board to user
+	 * Uecase3
 	 */
 	public void showBoard() {
-		System.out.println("TIC TAC TOE ");
-		System.out.println();
 		for (int i = 1; i < 10; i++) {
 			System.out.print(board[i]);
 			if ((2 * i) % 3 != 0) {
 				System.out.print(" | ");
 			}
 			if (i % 3 == 0 && i != 9) {
-				System.out.println("\n_ _ _ _ ");
+				System.out.println("\n----------");
 			}
 		}
 		System.out.println();
 	}
 
 	/**
-	 * UC4 and UC5 choose position to make move at that position
+	 * Usecase4 and Usecase5
 	 * 
-	 * @param position
+	 * @param 
+	 * @param 
+	 * @return
 	 */
-	public void makeMove(int position) {
-		if (board[position] == "" && position > 0 && position < 10) {
-			board[position] = player;
+	public String makeMove(int position, String whoIsPlaying, String symbol) {
+		boolean check = isWinner(symbol);
+		boolean tie = isTie();
+		if (board[position] == " " && check == false && tie == false) {
+			if (whoIsPlaying.equals("User")) {
+				board[position] = user;
+				whoIsPlaying = "Computer";
+			} else {
+				board[position] = computer;
+				whoIsPlaying = "User";
+			}
 		} else {
-			System.out.println("Cannot choose this position, choose an empty position or enter valid index");
-			moveflag = false;
+			System.out.println("Enter empty position");
 		}
+		return whoIsPlaying;
+	}
+
+	
+	public int computerIsPlaying() {
+		int position = (int) Math.floor((Math.random()) * 10) % 9 + 1;
+		return position;
 	}
 
 	/**
-	 * UC6 Toss for who goes first
+	 * Usecase6
 	 * 
-	 * @param toss
+	 * @return
 	 */
-	public void toss(String toss) {
-
-		if (Math.random() < 0.5) {
-			System.out.println("heads it is");
-			if (toss.equalsIgnoreCase("heads")) {
-				System.out.println("Player goes first");
-			} else {
-				System.out.println("Computer's turn");
-			}
-			System.out.println("");
+	public String playFirst() {
+		int chance = (int) Math.floor(Math.random() * 10) % 2;
+		String startFirst;
+		String toss;
+		if (chance == 1) {
+			toss = "Heads";
+			startFirst = "User";
 		} else {
-			System.out.println("tails it is");
-			if (toss.equalsIgnoreCase("tails")) {
-				System.out.println("Player goes first");
-			} else {
-				System.out.println("Computer's turn");
-			}
+			toss = "Tails";
+			startFirst = "Computer";
 		}
+		System.out.println(toss + "..." + startFirst + " will play first");
+		return startFirst;
 	}
 
+
 	/**
-	 * UC7 decide next move
+	 * Uscase7
+	 * @return
 	 */
-	public void decideNext() {
-		boolean flagNext = false;
-		int count = 1;
+	public boolean isTie() {
+		boolean flag = true;
+		for (int i = 1; i < board.length; i++) {
+			if (board[i] == " ") {
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	
+	/**
+	 * Usecase7
+	 * @param symbol
+	 * @return
+	 */
+	public boolean isWinner(String symbol) {
+		boolean flag = false;
 		if (board[1].equals(symbol) && board[2].equals(symbol) && board[3].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[4].equals(symbol) && board[5].equals(symbol) && board[6].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[7].equals(symbol) && board[8].equals(symbol) && board[9].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[1].equals(symbol) && board[5].equals(symbol) && board[9].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[3].equals(symbol) && board[5].equals(symbol) && board[7].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[1].equals(symbol) && board[4].equals(symbol) && board[7].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[2].equals(symbol) && board[5].equals(symbol) && board[8].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		} else if (board[3].equals(symbol) && board[6].equals(symbol) && board[9].equals(symbol)) {
-			flagNext = true;
+			flag = true;
 		}
-		if (flagNext == true) {
-			System.out.println("Win");
-			flagNextDecide = false;
-		} else {
-			for (int i = 1; i < board.length; i++) {
-				if (board[i] != "") {
-					count++;
-				}
-			}
-			if (count == 9) {
-				System.out.println("Tie");
-			} else {
-				System.out.println("Next turn");
-			}
-		}
+		return flag;
 	}
 
 	public static void main(String[] args) {
-
-		TicTacToeGame tictacobject = new TicTacToeGame();
-
-		tictacobject.createBoard();
-		System.out.println("Player# choose heads or tails ");
-		String toss = input.nextLine();
-		tictacobject.toss(toss);
-
-		symbol = tictacobject.chooseSymbol();
-		System.out.println("Player's symbol : " + player);
-		System.out.println("Computer's symbol : " + computer);
-		tictacobject.showBoard();
-
+		TicTacToeGame tictactoe = new TicTacToeGame();
+		Scanner scan = new Scanner(System.in);
+		tictactoe.createBoard();
+		tictactoe.chooseSymbol();
+		String player = tictactoe.playFirst();
 		do {
-			flagNextDecide = true;
-			System.out.println("Enter the position where you want to make your move ");
-			int position = input.nextInt();
-			tictacobject.makeMove(position);
-			tictacobject.showBoard();
-			tictacobject.decideNext();
-		} while (flagNextDecide);
+			if (player.equals("Computer")) {
+				int compsPosition = tictactoe.computerIsPlaying();
+
+				player = tictactoe.makeMove(compsPosition, player, user);
+				tictactoe.showBoard();
+			} else {
+				System.out.println("Enter the position for move");
+				int position = scan.nextInt();
+				scan.nextLine();
+				player = tictactoe.makeMove(position, player, computer);
+				tictactoe.showBoard();
+			}
+			if (tictactoe.isWinner(user) == true) {
+				System.out.println("User wins");
+				break;
+			} else if (tictactoe.isWinner(computer) == true) {
+				System.out.println("Computer Wins");
+				break;
+			}
+		} while (tictactoe.isTie() == false);
+		tictactoe.showBoard();
+		scan.close();
 	}
 }
