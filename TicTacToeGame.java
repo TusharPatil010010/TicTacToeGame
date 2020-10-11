@@ -5,13 +5,13 @@ import java.util.Scanner;
 public class TicTacToeGame {
 	Scanner scanner = new Scanner(System.in);
 
-	static String inputSymbol;
 	public static String[] board = new String[10];
 	static String computer;
+	static String inputSymbol;
 	static int countMoves = 0;
 
 	/**
-	 * Usecase1
+	 * UC1 creating a tic tac board
 	 */
 	public void createBoard() {
 		for (int i = 1; i < 10; i++) {
@@ -20,12 +20,12 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Usecase2
+	 * UC2 choosing input
 	 */
 	public void chooseSymbol() {
 
 		do {
-			System.out.println("Enter the symbol for player from X or O");
+			System.out.println("Choose the symbol between X/O");
 			inputSymbol = scanner.nextLine();
 			if (inputSymbol.equals("X")) {
 				computer = "O";
@@ -40,7 +40,7 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Uecase3
+	 * UC3 show the board to user
 	 */
 	public void showBoard() {
 		for (int i = 1; i < 10; i++) {
@@ -56,10 +56,9 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Usecase4 and Usecase5
+	 * UC4 and UC5 making move at entered position
 	 * 
 	 * @param position
-	 * @param whoIsPlaying
 	 * @return
 	 */
 	public String makeMove(int position) {
@@ -78,7 +77,7 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Usecase6
+	 * UC6 toss for who goes first
 	 * 
 	 * @return
 	 */
@@ -98,7 +97,7 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Usecase7
+	 * UC7 deciding the next move winner/tie/nextMove
 	 * 
 	 * @param symbol
 	 * @return
@@ -128,7 +127,7 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Usecase8
+	 * UC8 Computer checks if there is any position so that he wins
 	 * 
 	 * @return
 	 */
@@ -148,7 +147,7 @@ public class TicTacToeGame {
 	}
 
 	/**
-	 * Usecase9
+	 * UC9 Computer checks for opponents win and blocks
 	 * 
 	 * @return
 	 */
@@ -166,46 +165,52 @@ public class TicTacToeGame {
 		}
 		return 0;
 	}
-	/**Usecase11
+
+	/**
+	 * UC10 If computer goes first, it checks for corners If available makes it's
+	 * first move there
+	 * 
 	 * @return
 	 */
 	public int checkCorners() {
-		int[] corners = {1,3,7,9};
+		int[] corners = { 1, 3, 7, 9 };
 		int position;
-		int choice = (int) Math.floor(Math.random() *10 ) % 4;
+		int choice = (int) Math.floor(Math.random() * 10) % 4;
 		position = corners[choice];
-		for(int i = 0; i < 4; i++) {
-			if(board[position].equals(" ")) {
+		for (int i = 0; i < 4; i++) {
+			if (board[position].equals(" ")) {
 				return position;
-			}
-			else {
-				choice = (int) Math.floor(Math.random() *10 ) % 4;
+			} else {
+				choice = (int) Math.floor(Math.random() * 10) % 4;
 				position = corners[choice];
 			}
 		}
 		return 10;
 	}
-	/**Usecase11
+
+	/**
+	 * UC11 If corners are filled computer checks for centre and then for sides
+	 * 
 	 * @return
 	 */
 	public int checkSides() {
-		int[] sides = {2,4,6,8};
+		int[] sides = { 2, 4, 6, 8 };
 		int position;
-		int choice = (int) Math.floor(Math.random() *10 ) % 4;
+		int choice = (int) Math.floor(Math.random() * 10) % 4;
 		position = sides[choice];
-		for(int i = 0; i < 4; i++) {
-			if(board[position].equals(" ")) {
+		for (int i = 0; i < 4; i++) {
+			if (board[position].equals(" ")) {
 				return position;
-			}
-			else {
-				choice = (int) Math.floor(Math.random() *10 ) % 4;
+			} else {
+				choice = (int) Math.floor(Math.random() * 10) % 4;
 				position = sides[choice];
 			}
 		}
 		return 10;
 	}
+
 	/**
-	 * Usecase8, Usecase9, Usecase10 modified for Usecase11
+	 * This method defines the computers logic required for the other cases
 	 * 
 	 * @return
 	 */
@@ -218,25 +223,24 @@ public class TicTacToeGame {
 			position = winPosition;
 		} else if (winPosition == 0 && blockPosition != 0) {
 			position = blockPosition;
-		}
-		else if(winPosition == 0 && blockPosition == 0) {
-			if(checkCorners() == 10) {
-				if(board[5].equals(" ")) {	
+		} else if (winPosition == 0 && blockPosition == 0) {
+			if (checkCorners() == 10) {
+				if (board[5].equals(" ")) {
 					position = 5;
-				}
-				else {
+				} else {
 					position = checkSides();
 				}
-			}
-			else {
+			} else {
 				position = checkCorners();
 			}
 		}
 		if (board[position].equals(" ")) {
 			board[position] = computer;
-			System.out.println("Computer played the move");
+			System.out.println("Computer's turn");
 			play = "User";
+			System.out.println("____________");
 			showBoard();
+			System.out.println("____________");
 			countMoves++;
 		}
 		return play;
@@ -246,6 +250,7 @@ public class TicTacToeGame {
 		TicTacToeGame tictac = new TicTacToeGame();
 		Scanner scan = new Scanner(System.in);
 		tictac.createBoard();
+		System.out.println("TIC TAC TOE");
 		tictac.chooseSymbol();
 		String player = tictac.playFirst();
 		while (true) {
@@ -255,20 +260,23 @@ public class TicTacToeGame {
 					System.out.println(" Computer wins");
 					break;
 				} else if (tictac.isWinner(board, computer) == 2) {
-					System.out.println("No one has won the game");
+					System.out.println("No one won, It's a tie");
 					break;
 				}
 			} else {
+				System.out.println("User's turn");
 				System.out.println("Enter the position for move");
 				int position = scan.nextInt();
 				scan.nextLine();
 				player = tictac.makeMove(position);
+				System.out.println("____________");
 				tictac.showBoard();
+				System.out.println("____________");
 				if (tictac.isWinner(board, inputSymbol) == 1) {
 					System.out.println(" User wins");
 					break;
 				} else if (tictac.isWinner(board, inputSymbol) == 2) {
-					System.out.println("No one has won the game");
+					System.out.println("No one won, It's a tie");
 					break;
 				}
 			}
