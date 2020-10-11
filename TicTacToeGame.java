@@ -5,10 +5,10 @@ import java.util.Scanner;
 public class TicTacToeGame {
 	Scanner scanner = new Scanner(System.in);
 
+	static String inputSymbol;
 	public static String[] board = new String[10];
 	static String computer;
 	static int countMoves = 0;
-	static String inputSymbol;
 
 	/**
 	 * Usecase1
@@ -58,6 +58,8 @@ public class TicTacToeGame {
 	/**
 	 * Usecase4 and Usecase5
 	 * 
+	 * @param position
+	 * @param whoIsPlaying
 	 * @return
 	 */
 	public String makeMove(int position) {
@@ -164,25 +166,71 @@ public class TicTacToeGame {
 		}
 		return 0;
 	}
-
+	/**Usecase11
+	 * @return
+	 */
+	public int checkCorners() {
+		int[] corners = {1,3,7,9};
+		int position;
+		int choice = (int) Math.floor(Math.random() *10 ) % 4;
+		position = corners[choice];
+		for(int i = 0; i < 4; i++) {
+			if(board[position].equals(" ")) {
+				return position;
+			}
+			else {
+				choice = (int) Math.floor(Math.random() *10 ) % 4;
+				position = corners[choice];
+			}
+		}
+		return 10;
+	}
+	/**Usecase11
+	 * @return
+	 */
+	public int checkSides() {
+		int[] sides = {2,4,6,8};
+		int position;
+		int choice = (int) Math.floor(Math.random() *10 ) % 4;
+		position = sides[choice];
+		for(int i = 0; i < 4; i++) {
+			if(board[position].equals(" ")) {
+				return position;
+			}
+			else {
+				choice = (int) Math.floor(Math.random() *10 ) % 4;
+				position = sides[choice];
+			}
+		}
+		return 10;
+	}
 	/**
-	 * Usecase8, Usecase9 modified for Usecase10
+	 * Usecase8, Usecase9, Usecase10 modified for Usecase11
 	 * 
 	 * @return
 	 */
 	public String compMove() {
 		String play = "Computer";
 		int winPosition = winPosition();
-		int pos = blockUsersWin();
-		int[] corners = { 1, 3, 7, 9 };
+		int blockPosition = blockUsersWin();
 		int position = (int) Math.floor(Math.random() * 10) % 9 + 1;
 		if (winPosition != 0) {
 			position = winPosition;
-		} else if (winPosition == 0 && pos != 0) {
-			position = pos;
-		} else if (winPosition == 0 && pos == 0) {
-			int choice = (int) Math.floor(Math.random() * 10) % 4;
-			position = corners[choice];
+		} else if (winPosition == 0 && blockPosition != 0) {
+			position = blockPosition;
+		}
+		else if(winPosition == 0 && blockPosition == 0) {
+			if(checkCorners() == 10) {
+				if(board[5].equals(" ")) {	
+					position = 5;
+				}
+				else {
+					position = checkSides();
+				}
+			}
+			else {
+				position = checkCorners();
+			}
 		}
 		if (board[position].equals(" ")) {
 			board[position] = computer;
